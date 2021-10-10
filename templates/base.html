@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+
+        <title>Квест</title>
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container flashed-messages">
+            <div class="row">
+                <div class="col-md-12">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                            {% if category == 'message' %}
+                              <div class="alert alert-warning" role="alert">
+                            {% else %}
+                              <div class="alert alert-{{ category }}" role="alert">
+                            {% endif %}
+                              {{ message }}
+                            </div>
+                        {% endfor %}
+                      {% endif %}
+                  {% endwith %}
+                </div>
+                </div>
+            </div>
+        {% block content %}{% endblock %}
+
+        {% block scripts %}
+            <!-- Optional JavaScript -->
+            <!-- {{ bootstrap.load_js() }} -->
+        {% endblock %}
+    </body>
+</html>
