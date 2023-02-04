@@ -1,56 +1,15 @@
 from flask import Flask, request, render_template, flash, redirect, url_for
-from flask_wtf import FlaskForm
-from wtforms import IntegerField, SubmitField, SelectField, StringField
-from wtforms.validators import InputRequired, Length
 from flask_bootstrap import Bootstrap
+
+from config import BaseConfig
+from forms import StartForm, FinishForm, GameForm
 from text_game import TextQuest
 
 app = Flask(__name__)
 global gamer
 
-
-# Конфигурация сервера Flask, т.к. проект учебный, secret_key пропишем явно и тут
-class BaseConfig:
-    SECRET_KEY = "klsfdvgdsj4ewt5vg3qweTGEWBV?%$Byghwb"
-    BOOTSTRAP_SERVE_LOCAL = True
-    DEBUG = False
-
-
 app.config.from_object(BaseConfig)
 bootstrap = Bootstrap(app)
-
-
-# Стартовая форма
-class StartForm(FlaskForm):
-    gamer_name = StringField("Имя игрока", validators=[
-        InputRequired(), Length(
-            min=3,
-            max=20,
-            message="Имя игрока не может быть менее 3х символов и более 20 символов.")]
-                             )
-    start_button = SubmitField("Начать приключение")
-
-
-# Финишная форма
-class FinishForm(FlaskForm):
-    finish_button = SubmitField("Вернуться на главную")
-
-
-# Основаная игровая форма
-class GameForm(FlaskForm):
-    direction = SelectField(
-        'Выберете направление для движения',
-        coerce=int,
-        choices=[
-            (0, 'Север'),
-            (1, 'Восток'),
-            (2, 'ЮГ'),
-            (3, 'Запад')
-        ],
-        render_kw={"class": "form-control"}
-    )
-    moves = IntegerField("Количество передвижений", render_kw={"class": "form-control"}, validators=[InputRequired()])
-    move_button = SubmitField("Идти")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -97,7 +56,7 @@ def game(finish=0):
             return redirect(url_for('index'))
         return render_template("endgame.html",
                                gamer=gamer,
-                               moves = game_class.moves,
+                               moves=game_class.moves,
                                endgame_text=game_class.end_text(),
                                form=finish_form)
 
